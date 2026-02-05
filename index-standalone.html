@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calm Room</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            transition: all 3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .app-container.chill {
+            background: linear-gradient(135deg, #e3e8f0 0%, #b8c6db 100%);
+        }
+
+        .app-container.boss {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 182, 193, 0.2);
+            transition: opacity 3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .app-container.chill .overlay {
+            background-color: rgba(147, 197, 253, 0.15);
+        }
+
+        .app-container.boss .overlay {
+            background-color: rgba(55, 65, 81, 0.3);
+        }
+
+        .content {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .greeting {
+            font-size: 1.875rem;
+            font-weight: 300;
+            margin-bottom: 4rem;
+            text-align: center;
+            color: #78350f;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .app-container.chill .greeting {
+            color: #334155;
+        }
+
+        .app-container.boss .greeting {
+            color: #f3f4f6;
+        }
+
+        .mood-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .mood-button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 500ms cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(1);
+        }
+
+        .mood-button:hover {
+            transform: scale(1.05);
+        }
+
+        .mood-button.warm {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .mood-button.warm:hover {
+            background-color: #fde68a;
+        }
+
+        .mood-button.warm.active {
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+
+        .mood-button.chill {
+            background-color: #f1f5f9;
+            color: #334155;
+        }
+
+        .mood-button.chill:hover {
+            background-color: #e2e8f0;
+        }
+
+        .mood-button.chill.active {
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+
+        .mood-button.boss {
+            background-color: #374151;
+            color: #f3f4f6;
+        }
+
+        .mood-button.boss:hover {
+            background-color: #4b5563;
+        }
+
+        .mood-button.boss.active {
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .mute-button {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 300ms ease;
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .app-container.chill .mute-button {
+            background-color: #f1f5f9;
+            color: #334155;
+        }
+
+        .app-container.boss .mute-button {
+            background-color: #374151;
+            color: #f3f4f6;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .volume-label {
+            font-size: 0.875rem;
+        }
+
+        .app-container.chill .volume-label {
+            color: #334155;
+        }
+
+        .app-container.boss .volume-label {
+            color: #f3f4f6;
+        }
+
+        .volume-slider {
+            width: 6rem;
+            height: 0.5rem;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            outline: none;
+            opacity: 0.6;
+            cursor: pointer;
+            transition: opacity 300ms;
+        }
+
+        .volume-slider:hover {
+            opacity: 0.8;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 640px) {
+            .greeting {
+                font-size: 1.5rem;
+                margin-bottom: 2rem;
+            }
+            
+            .mood-selector {
+                flex-direction: column;
+                gap: 0.75rem;
+                margin-bottom: 2rem;
+            }
+            
+            .audio-controls {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="app-container" id="appContainer">
+            <div class="overlay"></div>
+            <div class="content">
+                <h1 class="greeting" id="greeting">Welcome home. You can rest now.</h1>
+                
+                <div class="mood-selector">
+                    <button class="mood-button warm active" data-mood="warm">Warm</button>
+                    <button class="mood-button chill" data-mood="chill">Chill</button>
+                    <button class="mood-button boss" data-mood="boss">Boss</button>
+                </div>
+                
+                <div class="audio-controls">
+                    <button class="mute-button" id="muteButton">🔊</button>
+                    <div class="volume-control">
+                        <span class="volume-label">🔈</span>
+                        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.1" value="0.3">
+                        <span class="volume-label">🔉</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mood configuration
+        const moods = {
+            warm: {
+                id: 'warm',
+                name: 'Warm',
+                greeting: 'Welcome home. You can rest now.',
+                music: '/music/warm-ambient.mp3'
+            },
+            chill: {
+                id: 'chill',
+                name: 'Chill',
+                greeting: 'Breathe. There is nothing to fix.',
+                music: '/music/chill-ambient.mp3'
+            },
+            boss: {
+                id: 'boss',
+                name: 'Boss',
+                greeting: 'You are safe. You are capable.',
+                music: '/music/boss-focus.mp3'
+            }
+        };
+
+        let currentMood = 'warm';
+        let isMuted = false;
+        let volume = 0.3;
+        let audio = null;
+
+        // Load settings from localStorage
+        function loadSettings() {
+            const savedMood = localStorage.getItem('calmRoom_mood');
+            const savedVolume = localStorage.getItem('calmRoom_volume');
+            const savedMuted = localStorage.getItem('calmRoom_muted');
+
+            if (savedMood) currentMood = savedMood;
+            if (savedVolume) volume = parseFloat(savedVolume);
+            if (savedMuted) isMuted = savedMuted === 'true';
+        }
+
+        // Save settings to localStorage
+        function saveSettings() {
+            localStorage.setItem('calmRoom_mood', currentMood);
+            localStorage.setItem('calmRoom_volume', volume.toString());
+            localStorage.setItem('calmRoom_muted', isMuted.toString());
+        }
+
+        // Update UI based on mood
+        function updateMood(moodId) {
+            currentMood = moodId;
+            const mood = moods[moodId];
+            
+            // Update container class
+            const container = document.getElementById('appContainer');
+            container.className = `app-container ${moodId}`;
+            
+            // Update greeting
+            document.getElementById('greeting').textContent = mood.greeting;
+            
+            // Update button states
+            document.querySelectorAll('.mood-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-mood="${moodId}"]`).classList.add('active');
+            
+            saveSettings();
+        }
+
+        // Handle music playback
+        function updateMusic() {
+            if (audio) {
+                audio.pause();
+                audio.src = '';
+            }
+
+            if (!isMuted && moods[currentMood].music) {
+                try {
+                    audio = new Audio(moods[currentMood].music);
+                    audio.loop = true;
+                    audio.volume = volume;
+                    audio.play().catch(e => console.log('Audio play failed:', e));
+                } catch (e) {
+                    console.log('Audio initialization failed:', e);
+                }
+            }
+        }
+
+        // Event listeners
+        document.querySelectorAll('.mood-button').forEach(button => {
+            button.addEventListener('click', () => {
+                updateMood(button.dataset.mood);
+                updateMusic();
+            });
+        });
+
+        document.getElementById('muteButton').addEventListener('click', () => {
+            isMuted = !isMuted;
+            document.getElementById('muteButton').textContent = isMuted ? '🔇' : '🔊';
+            updateMusic();
+            saveSettings();
+        });
+
+        document.getElementById('volumeSlider').addEventListener('input', (e) => {
+            volume = parseFloat(e.target.value);
+            if (audio) {
+                audio.volume = isMuted ? 0 : volume;
+            }
+            saveSettings();
+        });
+
+        // Initialize
+        loadSettings();
+        updateMood(currentMood);
+        updateMusic();
+        
+        // Update mute button text
+        document.getElementById('muteButton').textContent = isMuted ? '🔇' : '🔊';
+        
+        // Update volume slider
+        document.getElementById('volumeSlider').value = volume;
+    </script>
+</body>
+</html>
