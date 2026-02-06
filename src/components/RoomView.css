@@ -213,6 +213,30 @@
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
+/* Main Content Area */
+.room-main-content {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Animations */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 /* Folders Container */
 .folders-container {
   flex: 1;

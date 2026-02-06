@@ -9,7 +9,7 @@ export const rooms = {
     textColor: 'text-amber-900',
     buttonColor: 'bg-amber-100 hover:bg-amber-200 text-amber-800',
     brownNoise: '/sounds/warm-brown.mp3',
-    hobbies: ['books', 'playlists', 'art', 'recipes', 'gardening', 'journaling', 'travel'],
+    hobbies: ['books', 'playlists', 'art', 'recipes', 'gardening', 'journaling', 'travel', 'notes'],
     launchGradient: 'from-orange-400 via-pink-400 to-red-400',
     launchColor: 'text-orange-900'
   },
@@ -23,7 +23,7 @@ export const rooms = {
     textColor: 'text-slate-700',
     buttonColor: 'bg-slate-100 hover:bg-slate-200 text-slate-700',
     brownNoise: '/sounds/chill-brown.mp3',
-    hobbies: ['coding', 'games', 'books', 'instruments', 'timer', 'journaling'],
+    hobbies: ['coding', 'games', 'cars', 'instruments', 'timer', 'notes'],
     launchGradient: 'from-blue-400 via-indigo-400 to-purple-400',
     launchColor: 'text-blue-900'
   },
@@ -37,7 +37,7 @@ export const rooms = {
     textColor: 'text-gray-100',
     buttonColor: 'bg-gray-700 hover:bg-gray-600 text-gray-100',
     brownNoise: '/sounds/boss-brown.mp3',
-    hobbies: ['quotes', 'lifestyle', 'career', 'projects', 'focus'],
+    hobbies: ['quotes', 'lifestyle', 'career', 'projects', 'focus', 'notes'],
     launchGradient: 'from-gray-800 via-gray-900 to-black',
     launchColor: 'text-gray-100'
   }

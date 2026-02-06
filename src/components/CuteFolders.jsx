@@ -22,28 +22,30 @@ const CuteFolders = ({ room, onFolderOpen }) => {
     lifestyle: '🏆',
     career: '📈',
     projects: '📋',
-    focus: '🎯'
+    focus: '🎯',
+    notes: '📝'
   };
 
   const hobbyNames = {
-    books: 'Books',
-    playlists: 'Playlists',
-    art: 'Art',
-    recipes: 'Recipes',
-    gardening: 'Gardening',
-    journaling: 'Journaling',
-    travel: 'Travel',
-    coding: 'Coding',
-    games: 'Games',
-    instruments: 'Instruments',
-    timer: 'Focus Timer',
-    quotes: 'Quotes',
-    cars: 'Dream Cars',
-    luxury: 'Luxury',
-    lifestyle: 'Lifestyle',
-    career: 'Career',
-    projects: 'Projects',
-    focus: 'Focus'
+    books: 'My Library 📚',
+    playlists: 'Soundscapes 🎵',
+    art: 'Studio 🎨',
+    recipes: 'Kitchen 🍳',
+    gardening: 'Botanicus 🌱',
+    journaling: 'Diary 📖',
+    travel: 'Journeys ✈️',
+    coding: 'Dev Space 💻',
+    games: 'Arena 🎮',
+    instruments: 'Melody 🎸',
+    timer: 'Flow Timer ⏰',
+    quotes: 'Wisdom 💭',
+    cars: 'Garage 🏎️',
+    luxury: 'Prestige 💎',
+    lifestyle: 'Daily Life 🏆',
+    career: 'Ambition 📈',
+    projects: 'Mission 📋',
+    focus: 'Deep Focus 🎯',
+    notes: 'My Ideas 📝'
   };
 
   return (
@@ -100,24 +102,6 @@ const CuteFolders = ({ room, onFolderOpen }) => {
           </button>
         ))}
 
-        {/* Add New Hobby Slot */}
-        <button
-          className={`cute-folder add-new-folder ${hoveredFolder === 'add-new' ? 'hovered' : ''}`}
-          style={{ animationDelay: `${room.hobbies.length * 0.1}s` }}
-          onMouseEnter={() => setHoveredFolder('add-new')}
-          onMouseLeave={() => setHoveredFolder(null)}
-          onClick={() => onFolderOpen('add-new')}
-        >
-          <div className="folder-bubble add-bubble">
-            <div className="folder-icon-bounce">
-              ➕
-            </div>
-          </div>
-          <div className="folder-label">
-            <span className="folder-name">Add New</span>
-            <div className="folder-underline" />
-          </div>
-        </button>
       </div>
 
       {/* Cute floor decoration */}

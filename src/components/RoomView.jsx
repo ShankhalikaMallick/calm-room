@@ -8,27 +8,8 @@ import './RoomView.css';
 const RoomView = ({ room, onBackToLaunch }) => {
   const [openFolder, setOpenFolder] = useState(null);
   const [customBackground, setCustomBackground] = useState(null);
-  const { isDarkMode, toggleTheme } = useTheme();
-
-
   const currentBackground = customBackground || room.defaultBackground;
-
-  // Check if "Add New" is selected
-  if (openFolder === 'add-new') {
-    return <NotepadView onBack={() => setOpenFolder(null)} />;
-  }
-
-  // If a folder is open, show folder content
-  if (openFolder) {
-    return (
-      <FolderContent
-        hobbyId={openFolder}
-        hobbyName={openFolder}
-        onBack={() => setOpenFolder(null)}
-        room={room}
-      />
-    );
-  }
+  const { isDarkMode, toggleTheme } = useTheme();
 
   return (
     <div className="room-container">
@@ -39,7 +20,7 @@ const RoomView = ({ room, onBackToLaunch }) => {
           backgroundImage: `url('${customBackground || room.defaultBackground}')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundColor: isDarkMode ? '#3d5172ff' : '#0a0a13ff',
+          backgroundColor: isDarkMode ? '#040e1eff' : '#ddddfcff',
           filter: 'blur(20px)',
           transform: 'scale(1.1)' // Prevents white edges from blur
         }}
@@ -48,8 +29,6 @@ const RoomView = ({ room, onBackToLaunch }) => {
           className="room-overlay"
           style={{ backgroundColor: isDarkMode ? 'rgba(9, 18, 36, 0.4)' : room.overlay }}
         />
-
-
       </div>
 
       <div className="room-content">
@@ -58,17 +37,17 @@ const RoomView = ({ room, onBackToLaunch }) => {
           {/* Left side - Back button */}
           <div className="back-button-container">
             <button
-              onClick={onBackToLaunch}
+              onClick={openFolder ? () => setOpenFolder(null) : onBackToLaunch}
               className="back-button"
-              title="Back to Home"
+              title="Back"
             >
-              ← Home
+              ← {openFolder ? 'Back' : 'Home'}
             </button>
           </div>
 
           {/* Center - Room title and greeting */}
           <div className="room-title">
-            <h1 className="greeting">{room.greeting}</h1>
+            {!openFolder && <h1 className="greeting animate-fade-in">{room.greeting}</h1>}
             <p className="room-name">{room.name}</p>
           </div>
 
@@ -83,12 +62,24 @@ const RoomView = ({ room, onBackToLaunch }) => {
           </div>
         </header>
 
-        {/* Cute hobby folders */}
-        <div className="folders-container">
-          <CuteFolders
-            room={room}
-            onFolderOpen={setOpenFolder}
-          />
+        {/* Dynamic Content */}
+        <div className="room-main-content">
+          {openFolder ? (
+            <FolderContent
+              key={openFolder}
+              hobbyId={openFolder}
+              hobbyName={openFolder}
+              onBack={() => setOpenFolder(null)}
+              room={room}
+            />
+          ) : (
+            <div className="folders-container">
+              <CuteFolders
+                room={room}
+                onFolderOpen={setOpenFolder}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

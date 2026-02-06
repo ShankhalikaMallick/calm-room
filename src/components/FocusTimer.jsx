@@ -2,16 +2,22 @@ import { useState, useEffect, useRef } from 'react';
 import './FocusTimer.css';
 
 const FocusTimer = ({ onClose }) => {
-  const [timeLeft, setTimeLeft] = useState(25 * 60);
+  const [durations, setDurations] = useState({
+    focus: 25,
+    shortBreak: 5,
+    longBreak: 30
+  });
+  const [timeLeft, setTimeLeft] = useState(durations.focus * 60);
   const [isActive, setIsActive] = useState(false);
   const [mode, setMode] = useState('focus'); // focus, shortBreak, longBreak
-  
+  const [isEditing, setIsEditing] = useState(false);
+
   const timerRef = useRef(null);
-  
+
   const modes = {
-    focus: { label: 'Focus', minutes: 25 },
-    shortBreak: { label: 'Short Break', minutes: 5 },
-    longBreak: { label: 'Long Break', minutes: 15 }
+    focus: { label: 'Focus', key: 'focus' },
+    shortBreak: { label: 'Short Break', key: 'shortBreak' },
+    longBreak: { label: 'Long Break', key: 'longBreak' }
   };
 
   useEffect(() => {
@@ -19,26 +25,33 @@ const FocusTimer = ({ onClose }) => {
       timerRef.current = setInterval(() => {
         setTimeLeft((prev) => prev - 1);
       }, 1000);
-    } else if (timeLeft === 0) {
+    } else if (timeLeft <= 0 && isActive) {
       setIsActive(false);
-      // Play a sound if possible (fallback to simple notification)
-      new Audio('/sounds/bell.mp3').play().catch(() => {});
+      new Audio('/sounds/bell.mp3').play().catch(() => { });
+      alert(`${modes[mode].label} finished!`);
     }
 
     return () => clearInterval(timerRef.current);
-  }, [isActive, timeLeft]);
+  }, [isActive, timeLeft, mode]);
 
   const toggleTimer = () => setIsActive(!isActive);
 
   const resetTimer = () => {
     setIsActive(false);
-    setTimeLeft(modes[mode].minutes * 60);
+    setTimeLeft(durations[mode] * 60);
   };
 
   const changeMode = (newMode) => {
     setMode(newMode);
     setIsActive(false);
-    setTimeLeft(modes[newMode].minutes * 60);
+    setTimeLeft(durations[newMode] * 60);
+  };
+
+  const updateDuration = (val) => {
+    const mins = Math.max(1, parseInt(val) || 1);
+    const newDurations = { ...durations, [mode]: mins };
+    setDurations(newDurations);
+    setTimeLeft(mins * 60);
   };
 
   const formatTime = (seconds) => {
@@ -48,15 +61,15 @@ const FocusTimer = ({ onClose }) => {
   };
 
   const calculateProgress = () => {
-    const totalSeconds = modes[mode].minutes * 60;
+    const totalSeconds = durations[mode] * 60;
     const progress = ((totalSeconds - timeLeft) / totalSeconds) * 100;
     return progress;
   };
 
   return (
-    <div className="focus-timer-container">
+    <div className="focus-timer-container animate-fade-in">
       <div className="timer-header">
-        <h2>Focus Timer</h2>
+        <h2 className="room-name">{modes[mode].label}</h2>
       </div>
 
       <div className="timer-modes">
@@ -73,21 +86,36 @@ const FocusTimer = ({ onClose }) => {
 
       <div className="timer-circle-container">
         <svg className="timer-svg" viewBox="0 0 100 100">
-          <circle 
-            className="timer-bg" 
-            cx="50" cy="50" r="45" 
-          />
-          <circle 
-            className="timer-progress" 
+          <circle
+            className="timer-bg"
             cx="50" cy="50" r="45"
-            style={{ 
+          />
+          <circle
+            className="timer-progress"
+            cx="50" cy="50" r="45"
+            style={{
               strokeDasharray: 283,
               strokeDashoffset: 283 - (283 * calculateProgress() / 100)
             }}
           />
         </svg>
-        <div className="timer-text">
-          {formatTime(timeLeft)}
+        <div className="timer-text-container" onClick={() => !isActive && setIsEditing(true)}>
+          {isEditing ? (
+            <input
+              type="number"
+              className="timer-edit-input"
+              value={durations[mode]}
+              onChange={(e) => updateDuration(e.target.value)}
+              onBlur={() => setIsEditing(false)}
+              onKeyDown={(e) => e.key === 'Enter' && setIsEditing(false)}
+              autoFocus
+            />
+          ) : (
+            <div className="timer-text">
+              {formatTime(timeLeft)}
+              <span className="edit-hint">✎ click to set</span>
+            </div>
+          )}
         </div>
       </div>
 
