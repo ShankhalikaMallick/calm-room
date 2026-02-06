@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Phases 3 & 4 Complete - Calm Room</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #ffeaa7 0%, #ff6b9d 50%, #c9f0ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2d3436;
+        }
+
+        .showcase-container {
+            text-align: center;
+            max-width: 900px;
+            padding: 2rem;
+        }
+
+        .phase-title {
+            font-size: 3rem;
+            font-weight: 100;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            background: linear-gradient(45deg, #ff6b9d, #ffb6c1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(255, 107, 157, 0.5)); }
+            100% { filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.5)); }
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            border-radius: 25px;
+            border: 3px solid rgba(255, 182, 193, 0.3);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) rotate(2deg) scale(1.02);
+            border-color: rgba(255, 192, 203, 0.6);
+            box-shadow: 
+                0 20px 40px rgba(255, 107, 157, 0.2),
+                0 0 30px rgba(255, 182, 193, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #d63031;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-desc {
+            font-size: 1rem;
+            color: rgba(45, 52, 54, 0.8);
+            line-height: 1.5;
+        }
+
+        .highlight {
+            background: linear-gradient(45deg, #4ade80, #22c55e);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-top: 1rem;
+            text-align: left;
+        }
+
+        .feature-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+            font-size: 0.9rem;
+            color: rgba(45, 52, 54, 0.7);
+        }
+
+        .feature-list li::before {
+            content: '✨';
+            position: absolute;
+            left: 0;
+            color: #ff6b9d;
+            font-weight: bold;
+        }
+
+        .tech-stack {
+            background: rgba(255, 182, 193, 0.1);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-top: 2rem;
+            border: 2px solid rgba(255, 192, 203, 0.2);
+        }
+
+        .tech-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .tech-item {
+            background: linear-gradient(135deg, #ff8fa3, #ffb6c1);
+            color: #d63031;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 2px solid #ff6b9d;
+            transition: all 0.3s ease;
+        }
+
+        .tech-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.3);
+        }
+
+        .demo-section {
+            background: rgba(255, 192, 203, 0.05);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-top: 2rem;
+            border: 1px dashed rgba(255, 182, 193, 0.3);
+        }
+
+        .demo-title {
+            font-size: 1.8rem;
+            color: #d63031;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .demo-code {
+            background: #2d3436;
+            color: #4ade80;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            border-left: 4px solid #ff6b9d;
+        }
+
+        .floating-emoji {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.6;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .emoji-1 {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .emoji-2 {
+            top: 20%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .emoji-3 {
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-10px) rotate(120deg); }
+            66% { transform: translateY(-5px) rotate(240deg); }
+        }
+
+        @media (max-width: 768px) {
+            .showcase-container {
+                padding: 1rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .phase-title {
+                font-size: 2.2rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-emoji emoji-1">🏠</div>
+    <div class="floating-emoji emoji-2">🎨</div>
+    <div class="floating-emoji emoji-3">✨</div>
+
+    <div class="showcase-container">
+        <h1 class="phase-title">✨ Phases 3 & 4 Complete!</h1>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <div class="feature-title">Cute Folders</div>
+                <div class="feature-desc">Replaced shelf with adorable bouncing folders, floating elements, and sparkles</div>
+                <ul class="feature-list">
+                    <li>Bubble-style folder buttons</li>
+                    <li>Floating stars and hearts</li>
+                    <li>Smooth hover animations</li>
+                    <li>Orbit glow particles</li>
+                    <li>Grass blade decorations</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🌗</div>
+                <div class="feature-title">Dark/Light Mode</div>
+                <div class="feature-desc">Beautiful theme system with custom colors and smooth transitions</div>
+                <ul class="feature-list">
+                    <li>Light: <span class="highlight">Soft pastel gradients</span></li>
+                    <li>Dark: <span class="highlight">Warm orange/purple tones</span></li>
+                    <li>Global theme toggle</li>
+                    <li>Adaptive color schemes</li>
+                    <li>Persistent preferences</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🖼️</div>
+                <div class="feature-title">Background Upload</div>
+                <div class="feature-desc">Custom wallpapers with Pinterest suggestions for inspiration</div>
+                <ul class="feature-list">
+                    <li>Drag & drop image upload</li>
+                    <li>Local storage persistence</li>
+                    <li>Pinterest search suggestions</li>
+                    <li>Reset to default option</li>
+                    <li>Room-specific keywords</li>
+                    <li>Automatic background application</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <div class="feature-title">Fixed Issues</div>
+                <div class="feature-desc">Resolved syntax errors and improved wallpaper visibility</div>
+                <ul class="feature-list">
+                    <li>Fixed bracket syntax error</li>
+                    <li>Enhanced background loading</li>
+                    <li>Improved image path handling</li>
+                    <li>Added fallback for missing images</li>
+                    <li>Optimized loading performance</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tech-stack">
+            <h3>🛠️ Technical Enhancements</h3>
+            <div class="tech-list">
+                <div class="tech-item">Theme Context API</div>
+                <div class="tech-item">Local Storage Management</div>
+                <div class="tech-item">Component Architecture</div>
+                <div class="tech-item">Responsive Design</div>
+                <div class="tech-item">CSS Custom Properties</div>
+                <div class="tech-item">Animation System</div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h3 class="demo-title">🚀 Your Digital Home is Ready!</h3>
+            <div class="demo-code">
+                $ npm run dev<br/>
+                <span style="color: #4ade80;">✓ All features implemented</span><br/>
+                <span style="color: #ff6b9d;">🎨 Cute UI completed</span><br/>
+                <span style="color: #ffb6c1;">🌗 Themes working</span><br/>
+                <span style="color: #8b5cf6;">🖼️ Upload ready</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

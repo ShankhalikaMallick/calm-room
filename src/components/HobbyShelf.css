@@ -1,0 +1,251 @@
+/* Hobby Shelf Styles - Things on a Shelf */
+
+.hobby-shelf {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  perspective: 1000px;
+}
+
+.shelf-frame {
+  position: relative;
+  background: linear-gradient(135deg, #8b7355 0%, #6b5d54 50%, #4a3f36 100%);
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    inset 0 2px 5px rgba(255, 255, 255, 0.1);
+  border: 3px solid #5a4a3a;
+}
+
+.shelf-level {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  min-height: 200px;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.top-shelf {
+  padding-bottom: 1rem;
+}
+
+.bottom-shelf {
+  padding-top: 1rem;
+}
+
+.shelf-divider {
+  height: 3px;
+  background: linear-gradient(90deg, #3a2f25, #5a4a3a, #3a2f25);
+  margin: 0.5rem 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.shelf-divider::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: linear-gradient(180deg, #4a3f36, #2a1f16);
+  border-radius: 0 0 5px 5px;
+}
+
+.folder-container {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: shelfAppear 0.8s ease-out forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@keyframes shelfAppear {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.folder-container:hover {
+  transform: translateY(-15px) rotateX(5deg);
+}
+
+.folder-container.hovered {
+  transform: translateY(-15px) rotateX(5deg) scale(1.05);
+}
+
+.folder {
+  position: relative;
+  width: 120px;
+  height: 160px;
+  background: linear-gradient(135deg, #f4e4d8 0%, #e8d4c0 50%, #d4c4b0 100%);
+  border-radius: 8px 8px 2px 2px;
+  box-shadow: 
+    0 5px 15px rgba(0, 0, 0, 0.2),
+    inset 0 1px 3px rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.folder-spine {
+  position: absolute;
+  left: 10px;
+  top: 15px;
+  bottom: 15px;
+  width: 15px;
+  background: linear-gradient(90deg, #2a1f16, #4a3f36);
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.folder-icon {
+  font-size: 1.5rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  transform: rotate(-90deg);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.folder-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #d4c4b0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  transform: rotate(-90deg);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.folder-edge {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #ffffff, #d4c4b0);
+  border-radius: 0 2px 2px 0;
+  box-shadow: inset -1px 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.folder-shadow {
+  position: absolute;
+  bottom: -8px;
+  left: 5px;
+  right: 5px;
+  height: 8px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.folder-container:hover .folder {
+  background: linear-gradient(135deg, #fff0e5 0%, #f4e4d8 50%, #e8d4c0 100%);
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.3),
+    inset 0 1px 5px rgba(255, 255, 255, 0.4);
+}
+
+.folder-container:hover .folder-shadow {
+  bottom: -12px;
+  height: 12px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4) 0%, transparent 70%);
+}
+
+/* Shelf Lighting */
+.shelf-lighting {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.light-beam {
+  position: absolute;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  transform-origin: top;
+}
+
+.beam-1 {
+  top: -100px;
+  left: 20%;
+  width: 200px;
+  height: 300px;
+  transform: rotate(15deg);
+  animation: lightFlicker 8s ease-in-out infinite;
+}
+
+.beam-2 {
+  top: -100px;
+  right: 25%;
+  width: 180px;
+  height: 280px;
+  transform: rotate(-10deg);
+  animation: lightFlicker 10s ease-in-out infinite;
+  animation-delay: 3s;
+}
+
+@keyframes lightFlicker {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.1; }
+  70% { opacity: 0.4; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .shelf-frame {
+    padding: 1.5rem;
+  }
+  
+  .shelf-level {
+    min-height: 150px;
+    gap: 0.75rem;
+  }
+  
+  .folder {
+    width: 100px;
+    height: 130px;
+  }
+  
+  .folder-spine {
+    left: 8px;
+    top: 10px;
+    bottom: 10px;
+    width: 12px;
+  }
+  
+  .folder-icon {
+    font-size: 1.2rem;
+  }
+  
+  .folder-title {
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .shelf-level {
+    flex-wrap: wrap;
+    justify-content: center;
+    min-height: auto;
+    gap: 1rem;
+  }
+  
+  .folder {
+    width: 90px;
+    height: 120px;
+  }
+}

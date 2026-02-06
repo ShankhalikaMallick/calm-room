@@ -1,161 +1,105 @@
 import { useState, useEffect } from 'react';
-import { moods, defaultMood } from './moods';
 import './App.css';
+import LoginPage from './components/LoginPage';
+import LaunchPage from './components/LaunchPage';
+import RoomView from './components/RoomView';
+import { ThemeProvider } from './contexts/ThemeContext';
+import { rooms } from './data/rooms';
 
-function App() {
-  const [currentMood, setCurrentMood] = useState(defaultMood);
-  const [isMuted, setIsMuted] = useState(false);
-  const [volume, setVolume] = useState(0.3);
-  const [audio, setAudio] = useState(null);
+const App = () => {
+  const [user, setUser] = useState(null);
+  const [currentRoom, setCurrentRoom] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const mood = moods[currentMood];
-
-// Initialize app using localStorage
+  // Load user from localStorage
   useEffect(() => {
-    const initializeApp = () => {
-      // Load from localStorage
-      const savedMood = localStorage.getItem('calmRoom_mood');
-      const savedVolume = localStorage.getItem('calmRoom_volume');
-      const savedMuted = localStorage.getItem('calmRoom_muted');
+    const savedUser = localStorage.getItem('calmRoom_user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
 
-      if (savedMood) {
-        setCurrentMood(savedMood);
+    // Load last room for this user
+    if (savedUser) {
+      const email = JSON.parse(savedUser).email;
+      const lastRoom = localStorage.getItem(`calmRoom_currentRoom_${email}`);
+      if (lastRoom) {
+        setCurrentRoom(lastRoom);
       }
-      if (savedVolume) {
-        setVolume(parseFloat(savedVolume));
-      }
-      if (savedMuted) {
-        setIsMuted(savedMuted === 'true');
-      }
+    }
 
-      setIsLoading(false);
-    };
-
-    initializeApp();
+    setIsLoading(false);
   }, []);
 
-  // Handle music playback
-  useEffect(() => {
-    if (audio) {
-      audio.pause();
-      audio.src = '';
-    }
+  const handleLogin = (userData) => {
+    setUser(userData);
+    localStorage.setItem('calmRoom_user', JSON.stringify(userData));
 
-    if (!isMuted && mood.music) {
-      const newAudio = new Audio(mood.music);
-      newAudio.loop = true;
-      newAudio.volume = volume;
-      newAudio.play().catch(e => console.log('Audio play failed:', e));
-      setAudio(newAudio);
-    }
-
-    return () => {
-      if (audio) {
-        audio.pause();
-      }
-    };
-  }, [currentMood, isMuted]);
-
-  // Update volume
-  useEffect(() => {
-    if (audio) {
-      audio.volume = isMuted ? 0 : volume;
-    }
-  }, [volume, isMuted, audio]);
-
-  // Save settings to localStorage
-  const saveSettings = (newMood, newVolume, newMuted) => {
-    localStorage.setItem('calmRoom_mood', newMood);
-    localStorage.setItem('calmRoom_volume', newVolume.toString());
-    localStorage.setItem('calmRoom_muted', newMuted.toString());
+    // Load this specific user's last session
+    const lastRoom = localStorage.getItem(`calmRoom_currentRoom_${userData.email}`);
+    setCurrentRoom(lastRoom || null);
   };
 
-  const handleMoodChange = (newMood) => {
-    setCurrentMood(newMood);
-    saveSettings(newMood, volume, isMuted);
+  const handleLogout = () => {
+    setUser(null);
+    setCurrentRoom(null);
+    localStorage.removeItem('calmRoom_user');
   };
 
-  const handleVolumeChange = (newVolume) => {
-    setVolume(newVolume);
-    saveSettings(currentMood, newVolume, isMuted);
+  const handleRoomSelect = (room) => {
+    setCurrentRoom(room.id);
+    if (user) {
+      localStorage.setItem(`calmRoom_currentRoom_${user.email}`, room.id);
+    }
   };
 
-  const handleMuteToggle = () => {
-    const newMuted = !isMuted;
-    setIsMuted(newMuted);
-    saveSettings(currentMood, volume, newMuted);
+  const handleBackToLaunch = () => {
+    setCurrentRoom(null);
+    if (user) {
+      localStorage.setItem(`calmRoom_currentRoom_${user.email}`, '');
+    }
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 to-orange-50">
-        <div className="animate-pulse-slow text-amber-800 text-lg">Finding your calm space...</div>
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="animate-pulse-slow text-white text-lg">Preparing your digital home...</div>
       </div>
     );
   }
 
+  // Show Login Page if not authenticated
+  if (!user) {
+    return (
+      <ThemeProvider>
+        <LoginPage onLogin={handleLogin} />
+      </ThemeProvider>
+    );
+  }
+
+  // Show launch page if no room selected
+  if (!currentRoom) {
+    return (
+      <ThemeProvider>
+        <div className="app-wrapper">
+          <header className="app-user-header">
+            <span className="user-greeting">Welcome, {user.name}</span>
+            <button onClick={handleLogout} className="logout-btn">Log Out</button>
+          </header>
+          <LaunchPage onRoomSelect={handleRoomSelect} />
+        </div>
+      </ThemeProvider>
+    );
+  }
+
+  // Show room view
   return (
-    <div 
-      className="min-h-screen relative overflow-hidden transition-all duration-3000 ease-in-out"
-      style={{ background: mood.background }}
-    >
-      {/* Soft overlay for readability */}
-      <div 
-        className="absolute inset-0 transition-opacity duration-3000 ease-in-out"
-        style={{ backgroundColor: mood.overlay }}
+    <ThemeProvider>
+      <RoomView
+        room={rooms[currentRoom]}
+        onBackToLaunch={handleBackToLaunch}
       />
-      
-      {/* Main content */}
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center p-8">
-        {/* Greeting */}
-        <h1 className={`text-2xl md:text-3xl font-light mb-16 text-center animate-fade-in ${mood.textColor}`}>
-          {mood.greeting}
-        </h1>
-
-        {/* Mood selector */}
-        <div className="flex gap-4 mb-12">
-          {Object.values(moods).map((moodOption) => (
-            <button
-              key={moodOption.id}
-              onClick={() => handleMoodChange(moodOption.id)}
-              className={`px-6 py-3 rounded-full transition-all duration-500 transform hover:scale-105 ${
-                currentMood === moodOption.id
-                  ? 'ring-2 ring-white ring-opacity-50 shadow-lg'
-                  : ''
-              } ${mood.buttonColor}`}
-            >
-              {moodOption.name}
-            </button>
-          ))}
-        </div>
-
-        {/* Audio controls */}
-        <div className="flex items-center gap-6">
-          <button
-            onClick={handleMuteToggle}
-            className={`p-3 rounded-full transition-all duration-300 ${mood.buttonColor}`}
-          >
-            {isMuted ? '🔇' : '🔊'}
-          </button>
-          
-          <div className="flex items-center gap-3">
-            <span className={`text-sm ${mood.textColor}`}>🔈</span>
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.1"
-              value={volume}
-              onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-              className="w-24 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer opacity-60 hover:opacity-80 transition-opacity"
-            />
-            <span className={`text-sm ${mood.textColor}`}>🔉</span>
-          </div>
-        </div>
-      </div>
-    </div>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;

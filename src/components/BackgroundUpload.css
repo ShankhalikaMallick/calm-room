@@ -1,0 +1,54 @@
+/* Background Upload Component Styles */
+
+.background-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.upload-trigger {
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  color: white;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  white-space: nowrap;
+}
+
+.upload-trigger:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.upload-trigger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.upload-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.reset-btn {
+  padding: 0.5rem 0.75rem;
+  background: rgba(240, 166, 39, 0.8);
+  /* Warning color */
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.reset-btn:hover {
+  background: rgb(229, 170, 69);
+  transform: translateY(-1px);
+}
